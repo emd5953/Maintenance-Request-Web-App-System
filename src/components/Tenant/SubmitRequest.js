@@ -24,7 +24,7 @@ const SubmitRequest = () => {
         Object.entries(formData).forEach(([key, value]) => form.append(key, value));
 
         try {
-            const response = await axios.post('/api/submit-request', form);
+            await axios.post('/api/submit-request', form);
             alert('Request submitted successfully!');
         } catch (error) {
             console.error(error);
