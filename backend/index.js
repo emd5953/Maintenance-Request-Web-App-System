@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const db = require("./firebaseConfig");
+const db = require("./firebaseConfig2");
 
 const app = express();
 const PORT = 5000;
