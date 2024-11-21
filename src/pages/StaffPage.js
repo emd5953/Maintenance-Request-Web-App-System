@@ -4,8 +4,9 @@ import RequestManagement from '../components/Staff/RequestManagement';
 const StaffPage = () => {
     return (
         <div>
-            <h1>Staff Dashboard</h1>
+            <h1>Staff Portal</h1>
             <RequestManagement />
+            <hr />
         </div>
     );
 };

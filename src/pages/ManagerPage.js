@@ -5,8 +5,9 @@ import TenantManagement from '../components/Manager/TenantManagement';
 const ManagerPage = () => {
   return (
     <div>
-      <h1>Manager Dashboard</h1>
+      <h1>Manager Portal</h1>
       <AddTenant />
+      <hr />
       <TenantManagement />
     </div>
   );

@@ -1,68 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../api';
 
 const RequestManagement = () => {
     const [requests, setRequests] = useState([]);
-    const [filters, setFilters] = useState({ apartment: '', area: '', status: '' });
 
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await axios.get('/api/requests', { params: filters });
+                const response = await api.get('/requests');
                 setRequests(response.data);
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching requests:', error);
             }
         };
+
         fetchRequests();
-    }, [filters]);
+    }, []);
 
-    const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilters({ ...filters, [name]: value });
-    };
-
-    const handleStatusUpdate = async (id) => {
+    const updateStatus = async (id, status) => {
         try {
-            await axios.patch(`/api/update-status/${id}`, { status: 'completed' });
-            alert('Status updated!');
+            await api.patch(`/update-status/${id}`, { status });
+            alert('Status updated successfully!');
+            // Refresh requests
+            setRequests((prev) =>
+                prev.map((request) =>
+                    request.id === id ? { ...request, status } : request
+                )
+            );
         } catch (error) {
-            console.error(error);
+            console.error('Error updating status:', error);
+            alert('Failed to update status.');
         }
     };
 
     return (
         <div>
-            <h2>Request Management</h2>
-            <div>
-                <label>
-                    Apartment:
-                    <input type="text" name="apartment" onChange={handleFilterChange} />
-                </label>
-                <label>
-                    Area:
-                    <select name="area" onChange={handleFilterChange}>
-                        <option value="">All</option>
-                        <option value="kitchen">Kitchen</option>
-                        <option value="bathroom">Bathroom</option>
-                    </select>
-                </label>
-                <label>
-                    Status:
-                    <select name="status" onChange={handleFilterChange}>
-                        <option value="">All</option>
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                </label>
-            </div>
+            <h2>Manage Maintenance Requests</h2>
             <ul>
-                {requests.map((req) => (
-                    <li key={req.id}>
-                        {req.description} - {req.status}
-                        {req.status === 'pending' && (
-                            <button onClick={() => handleStatusUpdate(req.id)}>Mark as Completed</button>
-                        )}
+                {requests.map((request) => (
+                    <li key={request.id}>
+                        <strong>Apartment:</strong> {request.apartmentNumber} <br />
+                        <strong>Problem:</strong> {request.problemArea} <br />
+                        <strong>Status:</strong> {request.status} <br />
+                        <button onClick={() => updateStatus(request.id, 'completed')}>Mark as Completed</button>
+                        <button onClick={() => updateStatus(request.id, 'pending')}>Mark as Pending</button>
                     </li>
                 ))}
             </ul>

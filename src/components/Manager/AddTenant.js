@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../api';
 
 const AddTenant = () => {
     const [tenantData, setTenantData] = useState({
@@ -10,7 +10,6 @@ const AddTenant = () => {
         checkIn: '',
         checkOut: '',
     });
-    const [loading, setLoading] = useState(false); //loading state
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,16 +18,8 @@ const AddTenant = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); //start Loading
-
-        // Simple validation for empty fields
-        if (!tenantData.name || !tenantData.phone || !tenantData.email || !tenantData.apartmentNumber || !tenantData.checkIn) {
-            alert("Please fill in all required fields!");
-            return;
-        }
-
         try {
-            await axios.post('/api/add-tenant', tenantData);
+            await api.post('/add-tenant', tenantData);
             alert('Tenant added successfully!');
             setTenantData({
                 name: '',
@@ -37,47 +28,42 @@ const AddTenant = () => {
                 apartmentNumber: '',
                 checkIn: '',
                 checkOut: '',
-            }); // Reset the form
+            });
         } catch (error) {
-            if (error.response) {
-                // Handle backend validation errors
-                alert(error.response.data.error || 'An error occurred. Please try again.');
-            } else {
-                console.error("Error adding tenant:", error);
-                alert('Failed to add tenant. Please try again.');
-            }
-        } finally {
-            setLoading(false);
+            console.error('Error adding tenant:', error);
+            alert('Failed to add tenant.');
         }
-    
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px", maxWidth: "400px", margin: "auto" }}>
+        <form onSubmit={handleSubmit}>
             <label>
-                Name: <input type="text" name="name" onChange={handleChange} value={tenantData.name} required />
+                Name:
+                <input type="text" name="name" value={tenantData.name} onChange={handleChange} required />
             </label>
             <label>
-                Phone: <input type="text" name="phone" onChange={handleChange} value={tenantData.phone} required />
+                Phone:
+                <input type="text" name="phone" value={tenantData.phone} onChange={handleChange} required />
             </label>
             <label>
-                Email: <input type="email" name="email" onChange={handleChange} value={tenantData.email} required />
+                Email:
+                <input type="email" name="email" value={tenantData.email} onChange={handleChange} required />
             </label>
             <label>
-                Apartment: <input type="text" name="apartmentNumber" onChange={handleChange} value={tenantData.apartmentNumber} required />
+                Apartment Number:
+                <input type="text" name="apartmentNumber" value={tenantData.apartmentNumber} onChange={handleChange} required />
             </label>
             <label>
-                Check-in: <input type="date" name="checkIn" onChange={handleChange} value={tenantData.checkIn} required />
+                Check-In Date:
+                <input type="date" name="checkIn" value={tenantData.checkIn} onChange={handleChange} required />
             </label>
             <label>
-                Check-out: <input type="date" name="checkOut" onChange={handleChange} value={tenantData.checkOut} />
+                Check-Out Date:
+                <input type="date" name="checkOut" value={tenantData.checkOut} onChange={handleChange} />
             </label>
-            <button type="submit" disabled={loading} style={{ padding: "10px 20px", background: "#007BFF", color: "white", border: "none", borderRadius: "5px" }}>
-                {loading ? "Adding..." : "Add Tenant"}
-            </button>
+            <button type="submit">Add Tenant</button>
         </form>
     );
-    
 };
 
 export default AddTenant;
