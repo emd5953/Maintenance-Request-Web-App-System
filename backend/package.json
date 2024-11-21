@@ -16,5 +16,11 @@
     "express": "^4.21.1",
     "firebase": "^11.0.2",
     "firebase-admin": "^13.0.0"
+  },
+  "devDependencies": {
+    "npm-force-resolutions": "^0.0.10"
+  },
+  "resolutions": {
+  "punycode": "^2.1.1"
   }
 }
