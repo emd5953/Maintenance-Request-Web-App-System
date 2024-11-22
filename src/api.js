@@ -1,8 +1,21 @@
 import axios from 'axios';
 
-// Create an Axios instance with the backend base URL
-const api = axios.create({
-    baseURL: 'http://localhost:5000', // Adjust based on your backend's URL
-});
+const API_BASE_URL = 'http://localhost:5000';
 
-export default api;
+// Submit a maintenance request
+export const submitRequest = async (formData) => {
+    return await axios.post(API_URL, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+};
+// Fetch all maintenance requests
+export const fetchRequests = async () => {
+    return await axios.get(`${API_BASE_URL}/requests`);
+};
+
+// Update request status
+export const updateRequestStatus = async (id, status) => {
+    return await axios.patch(`${API_BASE_URL}/update-status/${id}`, { status });
+};
