@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../api';
+import { submitRequest, fetchRequests, updateRequestStatus } from '../../api';
+
 
 const RequestManagement = () => {
     const [requests, setRequests] = useState([]);

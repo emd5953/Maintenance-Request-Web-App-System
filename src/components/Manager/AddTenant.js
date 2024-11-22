@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import api from '../../api';
+import { submitRequest, fetchRequests, updateRequestStatus } from '../../api';
+
+
 
 const AddTenant = () => {
     const [tenantData, setTenantData] = useState({

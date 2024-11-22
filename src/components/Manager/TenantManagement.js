@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../api'; // Import the API utility
+import { submitRequest, fetchRequests, updateRequestStatus } from '../../api';
+
 
 const TenantManagement = () => {
     const [tenants, setTenants] = useState([]);
