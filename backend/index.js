@@ -1,3 +1,4 @@
+const axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -53,18 +54,31 @@ app.post('/submit-request', upload.single('photo'), async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+  // Validate file type if a file is uploaded
+  if (file && !['image/jpeg', 'image/png'].includes(file.mimetype)) {
+    await unlink(file.path); // Delete the invalid file from the server
+    return res.status(400).json({ error: 'Invalid file type. Only JPEG and PNG are allowed.' });
+  }
 
    // Upload photo to Imgur (if provided)
-    let photoUrl = null;
-    if (file) {
+   let photoUrl = null;
+   if (file) {
+    try {
       const imgurResponse = await axios.post(
         'https://api.imgur.com/3/image',
         { image: file.path, type: 'file' },
-        { headers: { Authorization: `e90c56180adc64d` } }
+        { headers: { Authorization: 'Client-ID e90c56180adc64d' } }
       );
       photoUrl = imgurResponse.data.data.link;
+  
+      // Delete temporary file
+      await unlink(file.path);
+    } catch (uploadError) {
+      console.error('Error uploading photo:', uploadError);
+      return res.status(500).json({ error: 'Failed to upload photo' });
     }
-
+  }
+  
     const newRequest = {
       apartmentNumber,
       problemArea,

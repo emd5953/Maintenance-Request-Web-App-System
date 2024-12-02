@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import api from '../../api';
 
 
-
 const SubmitRequest = () => {
     const [formData, setFormData] = useState({
         apartmentNumber: '',
@@ -11,6 +10,7 @@ const SubmitRequest = () => {
     });
 
     const [photo, setPhoto] = useState(null); // State for the photo file
+    const [isLoading, setIsLoading] = useState(false); // State for loading status
 
     // Handle input field changes
     const handleChange = (e) => {
@@ -38,6 +38,8 @@ const SubmitRequest = () => {
             formDataToSend.append('photo', photo);
         }
 
+        setIsLoading(true); // Start loading
+
         try {
             const response = await api.post('/submit-request', formDataToSend, {
                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -48,8 +50,10 @@ const SubmitRequest = () => {
             setFormData({ apartmentNumber: '', problemArea: '', description: '' });
             setPhoto(null);
         } catch (error) {
-            console.error('Error submitting request:', error);
+            console.error('Error submitting request:', error.response?.data || error.message);
             alert('Failed to submit request.');
+        }finally {
+            setIsLoading(false);
         }
     };
 

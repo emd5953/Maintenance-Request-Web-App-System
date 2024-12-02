@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
 import TenantPage from './pages/TenantPage';
 import StaffPage from './pages/StaffPage';
 import ManagerPage from './pages/ManagerPage';
@@ -10,7 +11,8 @@ function App() {
         <Router>
             <Navbar />
             <Routes>
-                <Route path="/" element={<TenantPage />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/tenant" element={<TenantPage />} />
                 <Route path="/staff" element={<StaffPage />} />
                 <Route path="/manager" element={<ManagerPage />} />
             </Routes>
